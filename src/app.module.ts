@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { AccountModule } from './UseCases/Account/account.module';
+import { UserModule } from './UseCases/users/user.module';
 import rateLimitConfig from './config/rateLimiting.config';
-import envConfig from './config/env.config';
-import queues from './queues';
-import bullConfig from './config/bull.config';
+import nestConfig from './config/nest.config';
+import typeOrmConfig from './config/typeOrm.config';
+import { AuthModule } from './UseCases/auth/auth.module';
 
 @Module({
-  imports: [AccountModule, rateLimitConfig, envConfig, bullConfig, queues],
+  imports: [nestConfig, rateLimitConfig, typeOrmConfig, AuthModule, UserModule],
   controllers: [],
   providers: [],
 })

@@ -1,13 +1,17 @@
-import nodemailer from 'nodemailer';
+import { MailerModule } from '@nestjs-modules/mailer';
 
-const transporter = nodemailer.createTransport({
-  host: process.env.NODEMAILER_HOST,
-  port: process.env.NODEMAILER_PORT,
-  secure: false,
-  auth: {
-    user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS,
+console.log(process.env.NODEMAILER_HOST);
+export default MailerModule.forRoot({
+  transport: {
+    // service: 'gmail',
+    host: process.env.NODEMAILER_HOST,
+    port: Number(process.env.NODEMAILER_PORT),
+    logger: true,
+    debug: true,
+    secure: true,
+    auth: {
+      user: process.env.NODEMAILER_USER,
+      pass: process.env.NODEMAILER_PASS,
+    },
   },
 });
-
-export default transporter;
