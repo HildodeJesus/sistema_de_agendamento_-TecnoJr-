@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
+import { Users } from './users.entity';
 import { Establishments } from './establishments.entity';
 
 @Entity()
@@ -20,11 +20,15 @@ export class Schedules {
   @Column('datetime', { nullable: false })
   is_finished: Date;
 
-  @ManyToOne(() => Establishments, (establishment) => establishment.schedules)
+  @ManyToOne(() => Establishments, (establishment) => establishment.schedules, {
+    cascade: true,
+  })
   establishment: Establishments;
 
-  @ManyToOne(() => User, (user) => user.schedules)
-  user: User;
+  @ManyToOne(() => Users, (user) => user.schedules, {
+    cascade: true,
+  })
+  user: Users;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

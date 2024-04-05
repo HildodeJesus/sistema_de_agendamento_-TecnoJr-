@@ -5,7 +5,7 @@ import { Queue } from 'bull';
 import { CreateUserDto } from './dto/create_user.dto';
 import UserService from './user.service';
 
-@Controller('user')
+@Controller('users')
 export default class UserController {
   constructor(
     private userService: UserService,

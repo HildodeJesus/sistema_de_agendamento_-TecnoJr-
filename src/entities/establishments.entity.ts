@@ -5,11 +5,13 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Categories } from './categories.entity';
 import { Schedules } from './schedules.entity';
+import { Address } from './address.entity';
 
 @Entity()
 export class Establishments {
@@ -36,7 +38,14 @@ export class Establishments {
   @Column({ nullable: true })
   is_close: string;
 
-  @ManyToMany(() => Categories, { cascade: false })
+  @OneToOne(() => Address, (address) => address.establishment, {
+    cascade: false,
+  })
+  address: Address;
+
+  @ManyToMany(() => Categories, (category) => category.establishments, {
+    cascade: false,
+  })
   @JoinTable()
   categories: Categories[];
 

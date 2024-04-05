@@ -3,15 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 
-import { User } from 'src/entities/user.entity';
+import { Users } from 'src/entities/users.entity';
 
 @Injectable()
 export default class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Users) private userRepository: Repository<Users>,
   ) {}
   async store(
-    newUser: Omit<User, 'id' | 'created_at' | 'updated_at'>,
+    newUser: Omit<Users, 'id' | 'created_at' | 'updated_at' | 'schedules'>,
   ): Promise<void> {
     const hashedPassword = await bcrypt.hash(newUser.password, 8);
 
@@ -20,7 +20,7 @@ export default class UserService {
     return;
   }
 
-  async getByEmail(email: string): Promise<User> {
+  async getByEmail(email: string): Promise<Users> {
     const user = await this.userRepository.findOneBy({ email: email });
     return user;
   }

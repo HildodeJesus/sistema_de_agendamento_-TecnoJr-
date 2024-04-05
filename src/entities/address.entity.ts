@@ -11,7 +11,7 @@ import { Establishments } from './establishments.entity';
 
 @Entity()
 export class Address {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column({ nullable: false })
@@ -39,9 +39,11 @@ export class Address {
   @Column({ nullable: true })
   complement: string;
 
-  @OneToOne(() => Establishments, { cascade: true })
+  @OneToOne(() => Establishments, (establishment) => establishment.address, {
+    cascade: true,
+  })
   @JoinColumn()
-  establishments_id: string;
+  establishment: string;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

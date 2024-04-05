@@ -9,7 +9,7 @@ import {
 import { Schedules } from './schedules.entity';
 
 @Entity()
-export class User {
+export class Users {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
