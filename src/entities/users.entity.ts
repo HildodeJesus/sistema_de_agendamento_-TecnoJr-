@@ -22,6 +22,9 @@ export class Users {
   @Column()
   password: string;
 
+  @Column()
+  isActivated: boolean;
+
   @OneToMany(() => Schedules, (schedule) => schedule.user)
   schedules: Schedules[];
 

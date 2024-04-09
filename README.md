@@ -1,14 +1,32 @@
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Projeto desenvolvido em [Nest.JS](https://github.com/nestjs/nest). Esse é um sistema de agendamento de horário para diferentes estabelecimentos. Desde que esse estabelecimento precise entregar praticidade aos seus clientes no momento de agendar um horário ou, até mesmo, um maneira de mostrar seu estabelicimento para novos possíveis clientes.
+
+## Funcionalidades
+
+- Login
+- CRUD em Estabelecimentos
+- CRUD em Categorias
+- CRUD em users
+- Envio de emails com fila
+- gerar relatórios em PDF para a loja
 
 ## Installation
+
+clone o repositorio
+
+```bash
+$ git clone https://github.com/HildodeJesus/sistema_de_agendamento_-TecnoJr-.git
+$ cd "pasta onde clonou o repositório"
+```
+
+instalando dependencias
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+Executando o app
 
 ```bash
 # development
@@ -23,28 +41,7 @@ $ npm run start:prod
 
 ## Documentação da API
 
-#### Pegar um usuário no BD através da número do usuário
-
-```http
-  GET /user
-```
-
-| Parâmetro | Tipo     | Descrição                                                    |
-| :-------- | :------- | :----------------------------------------------------------- |
-| `code`    | `string` | **Obrigatório**. Código que o cliente recebeu por SMS        |
-| `phone`   | `string` | **Obrigatório**. Celular do cliente cadastrado anteriormente |
-
-#### Logar em alguma conta com um número de celular
-
-```http
-  POST /user
-```
-
-| Parâmetro  | Tipo     | Descrição                                                            |
-| :--------- | :------- | :------------------------------------------------------------------- |
-| `name`     | `string` | **Obrigatório**. Nome do cliente                                     |
-| `email`    | `string` | **Obrigatório**. Email do cliente                                    |
-| `password` | `string` | **Obrigatório**. Senha para segurança da conta definida pelo cliente |
+https://localhost:3000/api/doc
 
 ## Stay in touch
 

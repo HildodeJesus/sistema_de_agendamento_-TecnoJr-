@@ -19,7 +19,7 @@ export class Categories {
   @ManyToMany(
     () => Establishments,
     (establishment) => establishment.categories,
-    { cascade: false },
+    { cascade: true },
   )
   establishments: Establishments[];
 

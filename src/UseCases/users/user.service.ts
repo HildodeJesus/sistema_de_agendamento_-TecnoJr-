@@ -12,16 +12,25 @@ export default class UserService {
   ) {}
   async store(
     newUser: Omit<Users, 'id' | 'created_at' | 'updated_at' | 'schedules'>,
-  ): Promise<void> {
+  ) {
     const hashedPassword = await bcrypt.hash(newUser.password, 8);
 
-    await this.userRepository.save({ ...newUser, password: hashedPassword });
+    const user = await this.userRepository.save({
+      ...newUser,
+      password: hashedPassword,
+    });
 
-    return;
+    console.log(user);
+
+    return user;
   }
 
   async getByEmail(email: string): Promise<Users> {
     const user = await this.userRepository.findOneBy({ email: email });
     return user;
+  }
+
+  async update(partialUser: Partial<Users>) {
+    this.userRepository.save(partialUser);
   }
 }

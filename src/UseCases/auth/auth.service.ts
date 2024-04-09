@@ -1,14 +1,20 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import UserService from '../users/user.service';
-import { JwtService } from '@nestjs/jwt';
+import { AccountActivationCode } from 'src/entities/accountActivationCode';
+import { generateRandomNumbers } from 'src/helpers/generateRandomNumbers';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    @InjectRepository(AccountActivationCode)
+    private AActivationCodeRepository: Repository<AccountActivationCode>,
   ) {}
 
   async signIn(email: string, pass: string): Promise<any> {
@@ -27,5 +33,34 @@ export class AuthService {
     const access_token = await this.jwtService.signAsync(payload);
 
     return { access_token };
+  }
+
+  async generateValidationCode(userId: string) {
+    const code = generateRandomNumbers(100000, 999999).toString();
+    const expires = (Date.now() + 1000 * 60 * 15) / 1000;
+
+    this.AActivationCodeRepository.save({
+      code,
+      expires,
+      user: { id: userId },
+    });
+
+    return code;
+  }
+
+  async validateUser(validationCode: string, userId: string) {
+    let validationCodeDBByUSer = await this.AActivationCodeRepository.findOne({
+      where: { code: validationCode, user: { id: userId } },
+    });
+
+    validationCodeDBByUSer = JSON.parse(JSON.stringify(validationCodeDBByUSer));
+
+    if (
+      validationCodeDBByUSer !== null &&
+      validationCodeDBByUSer.expires * 1000 > Date.now()
+    )
+      return true;
+
+    return false;
   }
 }

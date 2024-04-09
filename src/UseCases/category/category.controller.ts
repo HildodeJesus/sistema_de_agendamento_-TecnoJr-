@@ -20,7 +20,14 @@ export default class CategoryController {
   }
 
   @Get('establishment/:id')
-  async getEstablishmentByCategory(@Param('id') categoryId: string) {}
+  async getEstablishmentByCategory(@Param('id') categoryId: string) {
+    const categoryWithEstablishment =
+      await this.categoryService.getEstablishmenteByCategory(
+        Number(categoryId),
+      );
+
+    return categoryWithEstablishment;
+  }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {}

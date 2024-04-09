@@ -18,21 +18,22 @@ export class CategoryService {
     return;
   }
 
-  async getAll(): Promise<Categories[]> {
+  async getAll() {
     const categories = await this.categoriesRepository.find();
 
     return categories;
   }
 
-  async getEstablishmenteByCategory(categoryId: number): Promise<Categories> {
-    const establishment = await this.categoriesRepository.findOne({
+  async getEstablishmenteByCategory(categoryId: number) {
+    const category = await this.categoriesRepository.findOne({
       where: { id: categoryId },
       relations: {
         establishments: true,
       },
+      select: ['title', 'id'],
     });
 
-    return establishment;
+    return { category };
   }
 
   async delete(id: string) {
