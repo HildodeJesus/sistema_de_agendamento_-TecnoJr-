@@ -25,7 +25,9 @@ export class Schedules {
   })
   establishment: Establishments;
 
-  @ManyToOne(() => Users, (user) => user.schedules)
+  @ManyToOne(() => Users, (user) => user.schedules, {
+    onDelete: 'CASCADE',
+  })
   user: Users;
 
   @CreateDateColumn({ name: 'created_at' })
