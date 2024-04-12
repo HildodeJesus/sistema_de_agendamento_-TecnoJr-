@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Establishments } from 'src/entities/establishments.entity';
 import { Repository } from 'typeorm';
+
+import { Establishments } from 'src/entities/establishments.entity';
 import { CreateEstablishmentDto } from './dto/create_establishment.dto';
-import appDataSource from 'src/config/appDataSource';
 import { Address } from 'src/entities/address.entity';
+import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
+import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
+import { PageDto } from 'src/common/dtos/page.dto';
 import { Categories } from 'src/entities/categories.entity';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class EstablishmentService {
@@ -14,6 +18,7 @@ export class EstablishmentService {
     private establishmentsRepository: Repository<Establishments>,
     @InjectRepository(Address)
     private addressRepository: Repository<Address>,
+    private categoryService: CategoryService,
   ) {}
 
   async store(establishment: CreateEstablishmentDto) {
@@ -27,56 +32,73 @@ export class EstablishmentService {
     address.complement = establishment.address.complement;
     await this.addressRepository.save(address);
 
-    const newEstablishment = new Establishments();
+    const categories = [];
+    for (let i = 0; i < establishment.categories.length; i++) {
+      if (establishment.categories[i].id)
+        categories.push(establishment.categories[i].id);
+      else {
+        const category = new Categories();
+        category.title = establishment.categories[i].title;
+        await this.categoryService.store(category);
+        categories.push(category);
+      }
+    }
 
-    newEstablishment.name = establishment.name;
-    newEstablishment.description = establishment.description;
-    newEstablishment.is_open = establishment.is_open;
-    newEstablishment.is_close = establishment.is_close;
-    newEstablishment.number_phone = establishment.number_phone;
-    newEstablishment.image = establishment.image;
-    newEstablishment.address = address;
-    newEstablishment.categories = establishment.categories as Categories[];
-    await this.establishmentsRepository.save(newEstablishment);
+    await this.establishmentsRepository.save([
+      { ...establishment, address: address, categories: categories },
+    ]);
 
     return;
   }
 
-  async getAll(): Promise<Establishments[]> {
-    const establishments = await this.establishmentsRepository.find({});
+  async getAll(pageOptionsDto: PageOptionsDto) {
+    const queryBuilder =
+      this.establishmentsRepository.createQueryBuilder('establishments');
 
-    return establishments;
+    queryBuilder
+      .orderBy('establishments.created_at', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
-  async getById(id: string): Promise<Establishments> {
-    const establishment = await this.establishmentsRepository.findOne({
-      where: { id: id },
-      relations: {
-        address: true,
-        categories: true,
-      },
-    });
+  async getById(id: string) {
+    const queryBuilder =
+      this.establishmentsRepository.createQueryBuilder('establishment');
+
+    queryBuilder
+      .leftJoinAndSelect('establishment.address', 'address')
+      .leftJoinAndSelect('establishment.categories', 'categories')
+      .leftJoinAndSelect('establishment.schedules', 'schedules')
+      .where('establishment.id = :id', { id: id });
+
+    const establishment = await queryBuilder.getOne();
 
     return establishment;
   }
 
-  async update(id: string, establishment: CreateEstablishmentDto) {
-    await appDataSource
-      .createQueryBuilder()
-      .update(Establishments)
+  async update(id: string, establishment: Partial<CreateEstablishmentDto>) {
+    await this.establishmentsRepository
+      .createQueryBuilder('establishments')
+      .update()
       .set(establishment)
-      .where('id = :id', { id: id })
+      .where('establishments.id = :id', { id: id })
       .execute();
 
     return;
   }
 
   async delete(id: string) {
-    await appDataSource
-      .createQueryBuilder()
+    await this.establishmentsRepository
+      .createQueryBuilder('establishments')
       .delete()
-      .from(Establishments)
-      .where('id = :id', { id: id })
+      .where('establishments.id = :id', { id: id })
       .execute();
 
     return;

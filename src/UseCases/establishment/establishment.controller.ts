@@ -1,16 +1,26 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
+  Query,
+  UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { CreateEstablishmentDto } from './dto/create_establishment.dto';
 import { EstablishmentService } from './establishment.service';
+import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
+import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
+import { EstablishmentsDto } from './dto/establishment.dto';
 
 @Controller('establishments')
+@ApiTags('Users')
+@UseInterceptors(ClassSerializerInterceptor)
 export default class EstablishmentController {
   constructor(private establishmentService: EstablishmentService) {}
   @Post()
@@ -21,8 +31,10 @@ export default class EstablishmentController {
   }
 
   @Get()
-  async getAll() {
-    const establishments = await this.establishmentService.getAll();
+  @ApiPaginedResponse(EstablishmentsDto)
+  async getAll(@Query() pageOptionsDto: PageOptionsDto) {
+    const establishments =
+      await this.establishmentService.getAll(pageOptionsDto);
     return { establishments };
   }
 

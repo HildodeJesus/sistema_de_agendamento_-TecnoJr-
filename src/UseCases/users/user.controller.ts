@@ -5,8 +5,10 @@ import { Queue } from 'bull';
 import { CreateUserDto } from './dto/create_user.dto';
 import UserService from './user.service';
 import { AuthService } from '../auth/auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('users')
 export default class UserController {
   constructor(
     private userService: UserService,

@@ -39,17 +39,17 @@ export class Establishments {
   is_close: string;
 
   @OneToOne(() => Address, (address) => address.establishment, {
-    cascade: false,
+    onDelete: 'CASCADE',
   })
   address: Address;
 
   @ManyToMany(() => Categories, (category) => category.establishments, {
-    cascade: false,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   categories: Categories[];
 
-  @OneToMany(() => Schedules, (schedule) => schedule.user)
+  @OneToMany(() => Schedules, (schedule) => schedule.user, { cascade: true })
   schedules: Schedules[];
 
   @CreateDateColumn({ name: 'created_at' })

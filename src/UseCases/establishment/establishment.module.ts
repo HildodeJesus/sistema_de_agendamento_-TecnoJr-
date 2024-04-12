@@ -6,12 +6,13 @@ import { EstablishmentService } from './establishment.service';
 import { Categories } from 'src/entities/categories.entity';
 import { Address } from 'src/entities/address.entity';
 import { Schedules } from 'src/entities/schedules.entity';
+import { CategoryService } from '../category/category.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Categories, Address, Establishments, Schedules]),
   ],
   controllers: [EstablishmentController],
-  providers: [EstablishmentService],
+  providers: [EstablishmentService, CategoryService],
 })
 export class EstablishmentModule {}

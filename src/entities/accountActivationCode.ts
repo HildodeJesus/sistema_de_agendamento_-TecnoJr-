@@ -19,7 +19,7 @@ export class AccountActivationCode {
   @Column({ nullable: false })
   expires: number;
 
-  @OneToOne(() => Users, { cascade: true })
+  @OneToOne(() => Users, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: Users;
 

@@ -25,7 +25,7 @@ export class Users {
   @Column()
   isActivated: boolean;
 
-  @OneToMany(() => Schedules, (schedule) => schedule.user)
+  @OneToMany(() => Schedules, (schedule) => schedule.user, { cascade: true })
   schedules: Schedules[];
 
   @CreateDateColumn({ name: 'created_at' })

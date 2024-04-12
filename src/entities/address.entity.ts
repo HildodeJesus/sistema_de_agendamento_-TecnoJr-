@@ -40,7 +40,7 @@ export class Address {
   complement: string;
 
   @OneToOne(() => Establishments, (establishment) => establishment.address, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   establishment: string;

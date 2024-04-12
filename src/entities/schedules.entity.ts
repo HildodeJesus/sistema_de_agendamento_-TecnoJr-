@@ -21,13 +21,11 @@ export class Schedules {
   is_finished: Date;
 
   @ManyToOne(() => Establishments, (establishment) => establishment.schedules, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   establishment: Establishments;
 
-  @ManyToOne(() => Users, (user) => user.schedules, {
-    cascade: true,
-  })
+  @ManyToOne(() => Users, (user) => user.schedules)
   user: Users;
 
   @CreateDateColumn({ name: 'created_at' })

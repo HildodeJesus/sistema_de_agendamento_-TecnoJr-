@@ -2,17 +2,23 @@ import 'dotenv/config';
 
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { configuredSwagger } from './config/swagger.config';
+import { setupSwagger } from './config/swagger.config';
+import { ValidationPipe } from '@nestjs/common';
+
+const port = process.env.PORT || 5000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.use(helmet());
-  configuredSwagger(app);
+  setupSwagger(app);
 
-  await app.listen(3000, () => console.log('Server initializing in port 3000'));
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  await app.listen(port, () =>
+    console.log(`Server initializing in port ${port}`),
+  );
 }
 bootstrap();
