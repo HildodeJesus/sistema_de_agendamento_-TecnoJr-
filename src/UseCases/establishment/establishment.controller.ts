@@ -19,7 +19,7 @@ import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
 import { EstablishmentsDto } from './dto/establishment.dto';
 
 @Controller('establishments')
-@ApiTags('Users')
+@ApiTags('Establishments')
 @UseInterceptors(ClassSerializerInterceptor)
 export default class EstablishmentController {
   constructor(private establishmentService: EstablishmentService) {}
@@ -35,6 +35,21 @@ export default class EstablishmentController {
   async getAll(@Query() pageOptionsDto: PageOptionsDto) {
     const establishments =
       await this.establishmentService.getAll(pageOptionsDto);
+    return { establishments };
+  }
+
+  @Get('category/:categoryId')
+  @ApiPaginedResponse(EstablishmentsDto)
+  async getEstablishmentByCategory(
+    @Param('categoryId') categoryId: string,
+    @Query() pageOptionsDto: PageOptionsDto,
+  ) {
+    const establishments =
+      await this.establishmentService.getEstablishmentByCategory(
+        Number(categoryId),
+        pageOptionsDto,
+      );
+
     return { establishments };
   }
 

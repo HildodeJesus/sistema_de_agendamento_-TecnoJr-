@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
-@ApiTags('users')
+@ApiTags('Users')
 export default class UserController {
   constructor(
     private userService: UserService,

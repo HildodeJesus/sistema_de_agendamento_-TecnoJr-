@@ -83,6 +83,28 @@ export class EstablishmentService {
     return establishment;
   }
 
+  async getEstablishmentByCategory(
+    categoryId: number,
+    pageOptionsDto: PageOptionsDto,
+  ) {
+    const queryBuilder =
+      this.establishmentsRepository.createQueryBuilder('establishments');
+
+    queryBuilder
+      .leftJoin('establishments.categories', 'category')
+      .where('category.id = :categoryId', { categoryId })
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take)
+      .orderBy('establishments.created_at', pageOptionsDto.order);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ pageOptionsDto, itemCount });
+
+    return new PageDto(entities, pageMetaDto);
+  }
+
   async update(id: string, establishment: Partial<CreateEstablishmentDto>) {
     await this.establishmentsRepository
       .createQueryBuilder('establishments')

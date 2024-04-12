@@ -1,7 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create_category.dto';
 import { CategoryService } from './category.service';
 import { ApiTags } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
+import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
+import { CategoryDto } from './dto/category.dto';
 
 @Controller('categories')
 @ApiTags('categories')
@@ -14,21 +25,27 @@ export default class CategoryController {
     return { type: 'success', message: 'Categoria criada com sucesso!' };
   }
 
-  @Get()
-  async getAll() {
-    const categories = await this.categoryService.getAll();
-
-    return { categories };
-  }
-
   @Get('establishment/:id')
-  async getEstablishmentByCategory(@Param('id') categoryId: string) {
-    const categoryWithEstablishment =
-      await this.categoryService.getEstablishmenteByCategory(
-        Number(categoryId),
+  @ApiPaginedResponse(CategoryDto)
+  async getByCategory(
+    @Query() pageOptionsDto: PageOptionsDto,
+    @Param('id') id: string,
+  ) {
+    const establishments =
+      await this.categoryService.getEstablishmentOfCategory(
+        Number(id),
+        pageOptionsDto,
       );
 
-    return categoryWithEstablishment;
+    return { establishments };
+  }
+
+  @Get()
+  @ApiPaginedResponse(CategoryDto)
+  async getAll(@Query() pageOpitonsDto: PageOptionsDto) {
+    const categories = await this.categoryService.getAll(pageOpitonsDto);
+
+    return { categories };
   }
 
   @Delete(':id')

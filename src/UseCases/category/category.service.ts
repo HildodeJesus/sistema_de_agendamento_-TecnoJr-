@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create_category.dto';
 import AppDataSource from 'src/config/appDataSource';
 import { Categories } from 'src/entities/categories.entity';
+import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
+import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
+import { PageDto } from 'src/common/dtos/page.dto';
 
 @Injectable()
 export class CategoryService {
@@ -18,30 +21,39 @@ export class CategoryService {
     return;
   }
 
-  async getAll() {
-    const categories = await this.categoriesRepository.find();
+  async getAll(pageOptionsDto: PageOptionsDto) {
+    const queryBuilder =
+      this.categoriesRepository.createQueryBuilder('categories');
 
-    return categories;
+    queryBuilder
+      .orderBy('categories.created_at', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
-  async getEstablishmenteByCategory(categoryId: number) {
-    const category = await this.categoriesRepository.findOne({
-      where: { id: categoryId },
-      relations: {
-        establishments: true,
-      },
-      select: ['title', 'id'],
-    });
+  async getEstablishmentOfCategory(id: number, pageOptionsDto: PageOptionsDto) {
+    const queryBuilder =
+      this.categoriesRepository.createQueryBuilder('category');
 
-    return { category };
+    queryBuilder
+      .leftJoinAndSelect('category.establishments', 'establishments')
+      .where('category.id = :id', { id: id });
+
+    return await queryBuilder.getOne();
   }
 
   async delete(id: string) {
-    await AppDataSource.createQueryBuilder()
-      .delete()
-      .from(Categories)
-      .where('id = :id', { id: id })
-      .execute();
+    const queryBuilder =
+      this.categoriesRepository.createQueryBuilder('category');
+
+    queryBuilder.delete().where('category.id = :id', { id: id }).execute();
 
     return;
   }
