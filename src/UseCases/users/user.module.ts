@@ -9,11 +9,11 @@ import { ValidationEmailProcessor } from 'src/jobs/validationEmail.processor';
 import queueConfig from 'src/config/queue.config';
 import { BullModule } from '@nestjs/bull';
 import { AuthService } from '../auth/auth.service';
-import { AccountActivationCode } from 'src/entities/accountActivationCode';
+import { ValidateEmailCode } from 'src/entities/validateEmailCode';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, AccountActivationCode]),
+    TypeOrmModule.forFeature([Users, ValidateEmailCode]),
     queueConfig,
     BullModule.registerQueue({ name: 'validation-email' }),
     nodemailerConfig,

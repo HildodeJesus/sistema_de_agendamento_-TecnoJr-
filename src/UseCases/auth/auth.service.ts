@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import UserService from '../users/user.service';
-import { AccountActivationCode } from 'src/entities/accountActivationCode';
+import { ValidateEmailCode } from 'src/entities/validateEmailCode';
 import { generateRandomNumbers } from 'src/helpers/generateRandomNumbers';
 
 @Injectable()
@@ -13,10 +13,9 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    @InjectRepository(AccountActivationCode)
-    private AActivationCodeRepository: Repository<AccountActivationCode>,
+    @InjectRepository(ValidateEmailCode)
+    private validateEmailCodeRepository: Repository<ValidateEmailCode>,
   ) {}
-
   async signIn(email: string, pass: string): Promise<any> {
     const user = await this.userService.getByEmail(email);
     if (!user) throw new UnauthorizedException('Usuário não existe');
@@ -32,14 +31,14 @@ export class AuthService {
 
     const access_token = await this.jwtService.signAsync(payload);
 
-    return { access_token };
+    return access_token;
   }
 
   async generateValidationCode(userId: string) {
     const code = generateRandomNumbers(100000, 999999).toString();
     const expires = (Date.now() + 1000 * 60 * 15) / 1000;
 
-    this.AActivationCodeRepository.save({
+    this.validateEmailCodeRepository.save({
       code,
       expires,
       user: { id: userId },
@@ -49,9 +48,11 @@ export class AuthService {
   }
 
   async validateUser(validationCode: string, userId: string) {
-    let validationCodeDBByUSer = await this.AActivationCodeRepository.findOne({
-      where: { code: validationCode, user: { id: userId } },
-    });
+    let validationCodeDBByUSer = await this.validateEmailCodeRepository.findOne(
+      {
+        where: { code: validationCode, user: { id: userId } },
+      },
+    );
 
     validationCodeDBByUSer = JSON.parse(JSON.stringify(validationCodeDBByUSer));
 

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { signInDto } from './dto/signin.dto';
+import { SignInDto } from './dto/signin.dto';
 import { validateUserDto } from './dto/validateUser.dto';
 import UserService from '../users/user.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -23,13 +23,13 @@ export default class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('sign_in')
-  async signIn(@Body() body: signInDto) {
-    const { email, password } = body;
+  async signIn(@Body() signInDto: SignInDto) {
+    const { email, password } = signInDto;
 
     return await this.authService.signIn(email, password);
   }
 
-  @Post('validate')
+  @Post('validate_email')
   async validateUser(@Body() body: validateUserDto) {
     const { code, userId } = body;
 

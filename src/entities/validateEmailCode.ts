@@ -9,7 +9,7 @@ import {
 import { Users } from './users.entity';
 
 @Entity()
-export class AccountActivationCode {
+export class ValidateEmailCode {
   @PrimaryGeneratedColumn('increment')
   id: number;
 

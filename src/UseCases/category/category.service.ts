@@ -38,17 +38,6 @@ export class CategoryService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async getEstablishmentOfCategory(id: number, pageOptionsDto: PageOptionsDto) {
-    const queryBuilder =
-      this.categoriesRepository.createQueryBuilder('category');
-
-    queryBuilder
-      .leftJoinAndSelect('category.establishments', 'establishments')
-      .where('category.id = :id', { id: id });
-
-    return await queryBuilder.getOne();
-  }
-
   async delete(id: string) {
     const queryBuilder =
       this.categoriesRepository.createQueryBuilder('category');

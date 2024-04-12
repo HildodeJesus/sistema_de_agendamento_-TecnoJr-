@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ import { EstablishmentService } from './establishment.service';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
 import { EstablishmentsDto } from './dto/establishment.dto';
+import { AuthGuard } from 'src/common/auth/auth.guard';
 
 @Controller('establishments')
 @ApiTags('Establishments')
@@ -24,6 +26,7 @@ import { EstablishmentsDto } from './dto/establishment.dto';
 export default class EstablishmentController {
   constructor(private establishmentService: EstablishmentService) {}
   @Post()
+  @UseGuards(AuthGuard)
   async create(@Body() establishmentDto: CreateEstablishmentDto) {
     await this.establishmentService.store(establishmentDto);
 
@@ -61,6 +64,7 @@ export default class EstablishmentController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   async update(
     @Param('id') id: string,
     @Body() establishmentDto: CreateEstablishmentDto,
@@ -71,6 +75,7 @@ export default class EstablishmentController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   async delete(@Param('id') id: string) {
     await this.establishmentService.delete(id);
 

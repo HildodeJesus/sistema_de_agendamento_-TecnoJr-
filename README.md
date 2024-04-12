@@ -48,3 +48,9 @@ https://localhost:3000/api/doc
 - Linkedin of Author - [Hildo Jesus](https://www.linkedin.com/in/hildo-jesus/)
 - Instagram of Author - [hildoneto.dev](https://www.instagram.com/hildoneto.dev/)
 - GitHub of Author - [@HildodeJesus](https://github.com/HildodeJesus/)
+
+## Referência
+
+- [Documentation of NestJS](https://docs.nestjs.com)
+- [Documentation of TypeORM](https://typeorm.io)
+- [How to create pagination in Nest.js with TypeORM + Swagger](https://pietrzakadrian.com/blog/how-to-create-pagination-in-nestjs-with-typeorm-swagger)
