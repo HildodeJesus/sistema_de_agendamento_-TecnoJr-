@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Schedules } from './schedules.entity';
+import { Establishments } from './establishments.entity';
 
 @Entity()
 export class Users {
@@ -22,11 +23,17 @@ export class Users {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ default: 'off' })
+  role: string;
+
+  @Column({ default: false })
   isActivated: boolean;
 
   @OneToMany(() => Schedules, (schedule) => schedule.user, { cascade: true })
   schedules: Schedules[];
+
+  @OneToMany(() => Establishments, (establishment) => establishment.user)
+  establishment: Establishments;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

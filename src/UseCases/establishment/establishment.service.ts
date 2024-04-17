@@ -21,7 +21,7 @@ export class EstablishmentService {
     private categoryService: CategoryService,
   ) {}
 
-  async store(establishment: CreateEstablishmentDto) {
+  async store(id: string, establishment: CreateEstablishmentDto) {
     const address = new Address();
     address.city = establishment.address.city;
     address.state = establishment.address.state;
@@ -45,7 +45,12 @@ export class EstablishmentService {
     }
 
     await this.establishmentsRepository.save([
-      { ...establishment, address: address, categories: categories },
+      {
+        ...establishment,
+        address: address,
+        categories: categories,
+        user: { id: id },
+      },
     ]);
 
     return;
@@ -75,7 +80,6 @@ export class EstablishmentService {
     queryBuilder
       .leftJoinAndSelect('establishment.address', 'address')
       .leftJoinAndSelect('establishment.categories', 'categories')
-      .leftJoinAndSelect('establishment.schedules', 'schedules')
       .where('establishment.id = :id', { id: id });
 
     const establishment = await queryBuilder.getOne();

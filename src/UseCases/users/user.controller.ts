@@ -24,7 +24,6 @@ export default class UserController {
       name,
       email,
       password,
-      isActivated: false,
     };
 
     const user = await this.userService.store(newUser);

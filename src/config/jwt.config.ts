@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { JwtModule } from '@nestjs/jwt';
 
 export default JwtModule.register({

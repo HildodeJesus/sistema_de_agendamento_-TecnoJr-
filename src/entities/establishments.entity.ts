@@ -4,6 +4,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,6 +13,7 @@ import {
 import { Categories } from './categories.entity';
 import { Schedules } from './schedules.entity';
 import { Address } from './address.entity';
+import { Users } from './users.entity';
 
 @Entity()
 export class Establishments {
@@ -49,8 +51,13 @@ export class Establishments {
   @JoinTable()
   categories: Categories[];
 
-  @OneToMany(() => Schedules, (schedule) => schedule.user, { cascade: true })
+  @OneToMany(() => Schedules, (schedule) => schedule.user, {
+    onDelete: 'CASCADE',
+  })
   schedules: Schedules[];
+
+  @ManyToOne(() => Users, (user) => user.establishment, { onDelete: 'CASCADE' })
+  user: Users;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

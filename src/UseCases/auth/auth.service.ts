@@ -27,11 +27,14 @@ export class AuthService {
       id: user.id,
       email,
       name: user.name,
+      role: user.role,
     };
 
-    const access_token = await this.jwtService.signAsync(payload);
+    const access_token = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET,
+    });
 
-    return access_token;
+    return { access_token, user: payload };
   }
 
   async generateValidationCode(userId: string) {

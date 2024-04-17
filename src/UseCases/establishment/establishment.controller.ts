@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,17 +19,19 @@ import { EstablishmentService } from './establishment.service';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
 import { EstablishmentsDto } from './dto/establishment.dto';
-import { AuthGuard } from 'src/common/auth/auth.guard';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from 'src/auth/role.metadata';
 
 @Controller('establishments')
 @ApiTags('Establishments')
 @UseInterceptors(ClassSerializerInterceptor)
 export default class EstablishmentController {
   constructor(private establishmentService: EstablishmentService) {}
+
   @Post()
   @UseGuards(AuthGuard)
-  async create(@Body() establishmentDto: CreateEstablishmentDto) {
-    await this.establishmentService.store(establishmentDto);
+  async create(@Req() req, @Body() establishmentDto: CreateEstablishmentDto) {
+    await this.establishmentService.store(req.user.id, establishmentDto);
 
     return { type: 'success', message: 'Loja criada com sucesso!' };
   }
@@ -63,6 +66,7 @@ export default class EstablishmentController {
     return { establishment };
   }
 
+  @Roles('owner')
   @Put(':id')
   @UseGuards(AuthGuard)
   async update(
@@ -74,6 +78,7 @@ export default class EstablishmentController {
     return { type: 'success', message: 'Loja atualizada com sucesso!' };
   }
 
+  @Roles('owner')
   @Delete(':id')
   @UseGuards(AuthGuard)
   async delete(@Param('id') id: string) {
