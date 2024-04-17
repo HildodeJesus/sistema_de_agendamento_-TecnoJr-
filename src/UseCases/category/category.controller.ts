@@ -17,7 +17,7 @@ import { CategoryDto } from './dto/category.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('categories')
-@ApiTags('categories')
+@ApiTags('Categories')
 export default class CategoryController {
   constructor(private categoryService: CategoryService) {}
   @Post()

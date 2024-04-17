@@ -7,6 +7,7 @@ import typeOrmConfig from './config/typeOrm.config';
 import { AuthModule } from './UseCases/auth/auth.module';
 import { EstablishmentModule } from './UseCases/establishment/establishment.module';
 import { CategoryModule } from './UseCases/category/category.module';
+import { ScheduleModule } from './UseCases/schedules/schedules.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CategoryModule } from './UseCases/category/category.module';
     UserModule,
     EstablishmentModule,
     CategoryModule,
+    ScheduleModule,
   ],
   controllers: [],
   providers: [],
