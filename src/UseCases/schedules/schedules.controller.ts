@@ -26,6 +26,7 @@ export class SchedulesController {
   @Post()
   @UseGuards(AuthGuard)
   async create(@Body() createScheduleDto: CreateScheduleDto) {
+    //Validar se aquele horário não está marcado
     await this.schedulesService.store(createScheduleDto);
 
     return { type: 'success', message: 'Horário agendado com sucesso!' };

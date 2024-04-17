@@ -37,6 +37,7 @@ export default class UserController {
       { delay: 5000 },
     );
 
+    //Retonar id do usuário
     return { type: 'success', message: 'Criado com sucesso!' };
   }
 
