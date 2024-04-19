@@ -41,7 +41,7 @@ $ npm run start:prod
 
 ## Documentação da API
 
-https://localhost:3000/api/documentation
+https://localhost:${PORT}/documentation
 
 ## Stay in touch
 
