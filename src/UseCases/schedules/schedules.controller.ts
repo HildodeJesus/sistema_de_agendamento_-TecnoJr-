@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -26,7 +27,16 @@ export class SchedulesController {
   @Post()
   @UseGuards(AuthGuard)
   async create(@Body() createScheduleDto: CreateScheduleDto) {
-    //Validar se aquele horário não está marcado
+    const existSchedule = await this.schedulesService.validateHours(
+      createScheduleDto.is_started,
+      createScheduleDto.is_finished,
+    );
+
+    if (existSchedule.length > 0)
+      throw new BadRequestException(
+        'Já existe um horário marcado nesse intervalo',
+      );
+
     await this.schedulesService.store(createScheduleDto);
 
     return { type: 'success', message: 'Horário agendado com sucesso!' };

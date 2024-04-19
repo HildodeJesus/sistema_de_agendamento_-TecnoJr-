@@ -79,4 +79,17 @@ export class SchedulesService {
 
     return;
   }
+
+  async validateHours(isStarted: Date, isFinished: Date): Promise<Schedules[]> {
+    const queryBuilder =
+      this.schedulesRepository.createQueryBuilder('schedules');
+
+    queryBuilder
+      .where('schedule.is_started >= :isStarted', { isStarted })
+      .andWhere('schedule.is_finished <= :isFinished', { isFinished });
+
+    const schedules = await queryBuilder.getMany();
+
+    return schedules;
+  }
 }
