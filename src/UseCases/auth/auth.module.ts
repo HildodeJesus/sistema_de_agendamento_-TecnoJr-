@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import AuthController from './auth.controller';
 import jwtConfig from 'src/config/jwt.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import UserService from '../users/user.service';
+import {UserService} from '../users/user.service';
 import { Users } from 'src/entities/users.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ValidateEmailCode } from 'src/entities/validateEmailCode';

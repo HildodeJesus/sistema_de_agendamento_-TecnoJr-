@@ -10,6 +10,7 @@ import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
 import { PageDto } from 'src/common/dtos/page.dto';
 import { Categories } from 'src/entities/categories.entity';
 import { CategoryService } from '../category/category.service';
+import { UserService } from '../users/user.service';
 
 @Injectable()
 export class EstablishmentService {
@@ -19,9 +20,10 @@ export class EstablishmentService {
     @InjectRepository(Address)
     private addressRepository: Repository<Address>,
     private categoryService: CategoryService,
+    private userService: UserService
   ) {}
 
-  async store(id: string, establishment: CreateEstablishmentDto) {
+  async store(userId: string, establishment: CreateEstablishmentDto) {
     const address = new Address();
     address.city = establishment.address.city;
     address.state = establishment.address.state;
@@ -49,9 +51,11 @@ export class EstablishmentService {
         ...establishment,
         address: address,
         categories: categories,
-        user: { id: id },
+        user: { id: userId },
       },
     ]);
+
+    await this.userService.update({id: userId, role: "owner"});
 
     return;
   }

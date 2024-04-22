@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signin.dto';
 import { validateUserDto } from './dto/validateUser.dto';
-import UserService from '../users/user.service';
+import {UserService} from '../users/user.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
@@ -36,8 +36,13 @@ export default class AuthController {
     const validate = await this.authService.validateUser(code, userId);
     if (!validate) throw new UnauthorizedException();
 
-    this.userService.update({ id: userId, isActivated: true });
+    await this.userService.update({ id: userId, isActivated: true });
 
     return { type: 'success', message: 'Conta ativada!' };
+  }
+
+  @Post("recovery_password")
+  async recoveryPassword() {
+      
   }
 }

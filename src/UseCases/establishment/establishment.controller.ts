@@ -19,8 +19,8 @@ import { EstablishmentService } from './establishment.service';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
 import { EstablishmentsDto } from './dto/establishment.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { Roles } from 'src/auth/role.metadata';
+import { AuthGuard } from 'src/authorization/auth.guard';
+import { RoleGuard } from 'src/authorization/role.guard';
 
 @Controller('establishments')
 @ApiTags('Establishments')
@@ -66,9 +66,9 @@ export default class EstablishmentController {
     return { establishment };
   }
 
-  @Roles('owner')
-  @Put(':id')
   @UseGuards(AuthGuard)
+  @UseGuards(RoleGuard("owner"))
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() establishmentDto: CreateEstablishmentDto,
@@ -78,11 +78,11 @@ export default class EstablishmentController {
     return { type: 'success', message: 'Loja atualizada com sucesso!' };
   }
 
-  @Roles('owner')
-  @Delete(':id')
   @UseGuards(AuthGuard)
+  @UseGuards(RoleGuard("owner"))
+  @Delete(':id')
   async delete(@Param('id') id: string) {
-    await this.establishmentService.delete(id);
+    await this.establishmentService.delete(id);     
 
     return { type: 'success', message: 'Loja deletada com sucesso!' };
   }
