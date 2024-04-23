@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import UserService from '../users/user.service';
-import { ValidateEmailCode } from 'src/entities/validateEmailCode';
+import { UserService } from '../users/user.service';
+import { ValidateUser } from 'src/entities/validateUser';
 import { generateRandomNumbers } from 'src/helpers/generateRandomNumbers';
 
 @Injectable()
@@ -13,8 +13,8 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    @InjectRepository(ValidateEmailCode)
-    private validateEmailCodeRepository: Repository<ValidateEmailCode>,
+    @InjectRepository(ValidateUser)
+    private validateUserRepository: Repository<ValidateUser>,
   ) {}
   async signIn(email: string, pass: string): Promise<any> {
     const user = await this.userService.getByEmail(email);
@@ -38,31 +38,29 @@ export class AuthService {
     return { access_token, user: payload };
   }
 
-  async generateValidationCode(userId: string) {
+  async startedValidateUserForEmail(email: string) {
     const code = generateRandomNumbers(100000, 999999).toString();
     const expires = (Date.now() + 1000 * 60 * 15) / 1000;
 
-    this.validateEmailCodeRepository.save({
+    this.validateUserRepository.save({
       code,
       expires,
-      user: { id: userId },
+      user_email: email,
     });
 
     return code;
   }
 
-  async validateUser(validationCode: string, userId: string) {
-    let validationCodeDBByUSer = await this.validateEmailCodeRepository.findOne(
-      {
-        where: { code: validationCode, user: { id: userId } },
-      },
-    );
+  async validateUserForEmail(validationCode: string, email: string) {
+    let validationCodeDBByUser = await this.validateUserRepository.findOne({
+      where: { code: validationCode, user_email: email },
+    });
 
-    validationCodeDBByUSer = JSON.parse(JSON.stringify(validationCodeDBByUSer));
+    validationCodeDBByUser = JSON.parse(JSON.stringify(validationCodeDBByUser));
 
     if (
-      validationCodeDBByUSer !== null &&
-      validationCodeDBByUSer.expires * 1000 > Date.now()
+      validationCodeDBByUser !== null &&
+      validationCodeDBByUser.expires * 1000 > Date.now()
     )
       return true;
 

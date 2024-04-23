@@ -2,14 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Users } from './users.entity';
 
 @Entity()
-export class ValidateEmailCode {
+export class ValidateUser {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -17,11 +14,10 @@ export class ValidateEmailCode {
   code: string;
 
   @Column({ nullable: false })
-  expires: number;
+  user_email: string;
 
-  @OneToOne(() => Users, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  user: Users;
+  @Column({ nullable: false })
+  expires: number;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

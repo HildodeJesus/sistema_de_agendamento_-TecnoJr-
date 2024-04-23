@@ -67,7 +67,7 @@ export default class EstablishmentController {
   }
 
   @UseGuards(AuthGuard)
-  @UseGuards(RoleGuard("owner"))
+  @UseGuards(RoleGuard(['owner']))
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -79,10 +79,10 @@ export default class EstablishmentController {
   }
 
   @UseGuards(AuthGuard)
-  @UseGuards(RoleGuard("owner"))
+  @UseGuards(RoleGuard(['owner']))
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    await this.establishmentService.delete(id);     
+    await this.establishmentService.delete(id);
 
     return { type: 'success', message: 'Loja deletada com sucesso!' };
   }

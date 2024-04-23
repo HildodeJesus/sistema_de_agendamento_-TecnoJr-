@@ -15,9 +15,8 @@ import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create_schedule.dto';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { RescheduleDto } from './dto/reschedule.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { RoleGuard } from 'src/auth/role.guard';
-import { Roles } from 'src/auth/role.metadata';
+import { AuthGuard } from 'src/authorization/auth.guard';
+import { RoleGuard } from 'src/authorization/role.guard';
 
 @Controller('schedules')
 @ApiTags('Schedules')
@@ -42,9 +41,9 @@ export class SchedulesController {
     return { type: 'success', message: 'Horário agendado com sucesso!' };
   }
 
-  @Roles('owner')
   @Get()
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuard)
+  @UseGuards(RoleGuard(['owner']))
   async getAll(@Query() pageOptionsDto: PageOptionsDto) {
     const schedules = await this.schedulesService.getAll(pageOptionsDto);
 

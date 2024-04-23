@@ -19,8 +19,6 @@ export class UserService {
       password: hashedPassword,
     });
 
-    console.log(user);
-
     return user;
   }
 
@@ -30,6 +28,13 @@ export class UserService {
   }
 
   async update(partialUser: Partial<Users>) {
-    this.userRepository.save(partialUser);
+    if (partialUser.id !== undefined) {
+      await this.userRepository.save(partialUser);
+      return;
+    }
+
+    const user = await this.getByEmail(partialUser.email);
+    await this.userRepository.save({ ...partialUser, id: user.id });
+    return;
   }
 }

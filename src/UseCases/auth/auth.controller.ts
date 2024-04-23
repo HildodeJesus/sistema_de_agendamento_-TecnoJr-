@@ -1,16 +1,18 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signin.dto';
-import { validateUserDto } from './dto/validateUser.dto';
-import {UserService} from '../users/user.service';
+import { ValidateUserDto } from './dto/validateUser.dto';
+import { UserService } from '../users/user.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
@@ -30,19 +32,15 @@ export default class AuthController {
   }
 
   @Post('validate_email')
-  async validateUser(@Body() body: validateUserDto) {
-    const { code, userId } = body;
+  async validateUser(@Body() body: ValidateUserDto) {
+    const { code, email } = body;
 
-    const validate = await this.authService.validateUser(code, userId);
+    const validate = await this.authService.validateUserForEmail(code, email);
+    console.log(validate);
     if (!validate) throw new UnauthorizedException();
 
-    await this.userService.update({ id: userId, isActivated: true });
+    await this.userService.update({ email: email, isActivated: true });
 
     return { type: 'success', message: 'Conta ativada!' };
-  }
-
-  @Post("recovery_password")
-  async recoveryPassword() {
-      
   }
 }

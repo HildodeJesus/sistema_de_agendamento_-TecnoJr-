@@ -7,10 +7,17 @@ import { Categories } from 'src/entities/categories.entity';
 import { Address } from 'src/entities/address.entity';
 import { Schedules } from 'src/entities/schedules.entity';
 import { CategoryService } from '../category/category.service';
-import { UserService } from "src/UseCases/users/user.service"
+import { UserService } from 'src/UseCases/users/user.service';
+import { Users } from 'src/entities/users.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Categories, Address, Establishments, Schedules]),
+    TypeOrmModule.forFeature([
+      Categories,
+      Address,
+      Establishments,
+      Schedules,
+      Users,
+    ]),
   ],
   controllers: [EstablishmentController],
   providers: [EstablishmentService, CategoryService, UserService],

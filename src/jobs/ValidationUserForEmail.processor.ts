@@ -8,7 +8,7 @@ import {
 import { Job } from 'bull';
 
 @Processor('validation-email')
-export class ValidationEmailProcessor {
+export class ValidationUserForEmailProcessor {
   constructor(private readonly mailerService: MailerService) {}
 
   @Process()

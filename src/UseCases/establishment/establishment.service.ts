@@ -20,7 +20,7 @@ export class EstablishmentService {
     @InjectRepository(Address)
     private addressRepository: Repository<Address>,
     private categoryService: CategoryService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   async store(userId: string, establishment: CreateEstablishmentDto) {
@@ -55,7 +55,7 @@ export class EstablishmentService {
       },
     ]);
 
-    await this.userService.update({id: userId, role: "owner"});
+    await this.userService.update({ id: userId, role: 'owner' });
 
     return;
   }

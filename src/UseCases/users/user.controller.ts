@@ -3,7 +3,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 
 import { CreateUserDto } from './dto/create_user.dto';
-import UserService from './user.service';
+import { UserService } from './user.service';
 import { AuthService } from '../auth/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -28,8 +28,8 @@ export default class UserController {
 
     const user = await this.userService.store(newUser);
 
-    const validationCode = await this.authService.generateValidationCode(
-      user.id,
+    const validationCode = await this.authService.startedValidateUserForEmail(
+      user.email,
     );
 
     await this.validationEmailQueue.add(
@@ -37,7 +37,6 @@ export default class UserController {
       { delay: 5000 },
     );
 
-    //Retonar id do usuário
     return { type: 'success', message: 'Criado com sucesso!' };
   }
 

@@ -1,32 +1,32 @@
-import { CanActivate, ExecutionContext, Injectable, Type, UnauthorizedException, mixin } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Type,
+  UnauthorizedException,
+  mixin,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-export const RoleGuard = (role: string): Type<CanActivate> => {
+export const RoleGuard = (role: string[]): Type<CanActivate> => {
   class RoleGuardMixin implements CanActivate {
-    constructor(private reflector: Reflector) {}
-
     matchRoles(roles: string[], userRole: string) {
       return roles.some((role) => role === userRole);
     }
 
-    canActivate(context: ExecutionContext): boolean {
-      const roles = this.reflector.get<string[]>('roles', context.getHandler());
-
-      if (!roles) {
+    canActivate(context: ExecutionContext) {
+      if (!role) {
         return true;
       }
 
       const request = context.switchToHttp().getRequest();
       const user = request.user;
-      const hasRole = this.matchRoles(roles, user.role);
+      const hasRole = this.matchRoles(role, user.role);
 
-      if(!hasRole) 
-        throw new UnauthorizedException()
+      if (!hasRole) throw new UnauthorizedException();
 
       return true;
     }
   }
 
-  return mixin(RoleGuardMixin)
-}
-
+  return mixin(RoleGuardMixin);
+};
