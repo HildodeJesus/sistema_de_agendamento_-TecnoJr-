@@ -17,7 +17,7 @@ clone o repositorio
 
 ```bash
 $ git clone https://github.com/HildodeJesus/sistema_de_agendamento_-TecnoJr-.git
-$ cd "pasta onde clonou o repositório"
+$ cd sistema_de_agendamento_-TecnoJr-
 ```
 
 instalando dependencias
