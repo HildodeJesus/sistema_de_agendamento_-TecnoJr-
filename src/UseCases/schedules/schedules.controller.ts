@@ -15,8 +15,8 @@ import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create_schedule.dto';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { RescheduleDto } from './dto/reschedule.dto';
-import { AuthGuard } from 'src/authorization/auth.guard';
-import { RoleGuard } from 'src/authorization/role.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { RoleGuard } from 'src/guards/role.guard';
 
 @Controller('schedules')
 @ApiTags('Schedules')

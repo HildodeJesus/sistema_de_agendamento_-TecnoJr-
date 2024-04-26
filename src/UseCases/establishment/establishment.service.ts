@@ -11,6 +11,7 @@ import { PageDto } from 'src/common/dtos/page.dto';
 import { Categories } from 'src/entities/categories.entity';
 import { CategoryService } from '../category/category.service';
 import { UserService } from '../users/user.service';
+import { Roles } from 'src/entities/roles.entity';
 
 @Injectable()
 export class EstablishmentService {
@@ -46,16 +47,21 @@ export class EstablishmentService {
       }
     }
 
+    const role = new Roles();
+    role.name = 'owner';
+    role.permissions = ['all'];
+
     await this.establishmentsRepository.save([
       {
         ...establishment,
         address: address,
         categories: categories,
         user: { id: userId },
+        roles: [role],
       },
     ]);
 
-    await this.userService.update({ id: userId, role: 'owner' });
+    await this.userService.update({ id: userId, roles: [role] });
 
     return;
   }

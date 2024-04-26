@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
 import { CategoryDto } from './dto/category.dto';
-import { AuthGuard } from 'src/authorization/auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('categories')
 @ApiTags('Categories')

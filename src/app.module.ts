@@ -8,6 +8,7 @@ import { AuthModule } from './UseCases/auth/auth.module';
 import { EstablishmentModule } from './UseCases/establishment/establishment.module';
 import { CategoryModule } from './UseCases/category/category.module';
 import { ScheduleModule } from './UseCases/schedules/schedules.module';
+import { RolesModule } from './UseCases/roles/roles.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ScheduleModule } from './UseCases/schedules/schedules.module';
     EstablishmentModule,
     CategoryModule,
     ScheduleModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

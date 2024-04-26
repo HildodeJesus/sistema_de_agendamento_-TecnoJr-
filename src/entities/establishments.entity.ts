@@ -14,6 +14,7 @@ import { Categories } from './categories.entity';
 import { Schedules } from './schedules.entity';
 import { Address } from './address.entity';
 import { Users } from './users.entity';
+import { Roles } from './roles.entity';
 
 @Entity()
 export class Establishments {
@@ -58,6 +59,9 @@ export class Establishments {
 
   @ManyToOne(() => Users, (user) => user.establishment, { onDelete: 'CASCADE' })
   user: Users;
+
+  @ManyToOne(() => Roles, (roles) => roles.establishment)
+  roles: Roles[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

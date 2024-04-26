@@ -16,6 +16,7 @@ export class AuthService {
     @InjectRepository(ValidateUser)
     private validateUserRepository: Repository<ValidateUser>,
   ) {}
+
   async signIn(email: string, pass: string): Promise<any> {
     const user = await this.userService.getByEmail(email);
     if (!user) throw new UnauthorizedException('Usuário não existe');
@@ -36,6 +37,15 @@ export class AuthService {
     });
 
     return { access_token, user: payload };
+  }
+
+  async validateUser(token: string) {
+    const jwtSecret = process.env.JWT_SECRET as string;
+    const payload = await this.jwtService.verifyAsync(token, {
+      secret: jwtSecret,
+    });
+
+    return payload;
   }
 
   async startedValidateUserForEmail(email: string) {

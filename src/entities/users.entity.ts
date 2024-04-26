@@ -2,12 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Schedules } from './schedules.entity';
 import { Establishments } from './establishments.entity';
+import { Roles } from './roles.entity';
 
 @Entity()
 export class Users {
@@ -34,6 +36,9 @@ export class Users {
 
   @OneToMany(() => Establishments, (establishment) => establishment.user)
   establishment: Establishments;
+
+  @ManyToMany(() => Roles, (roles) => roles.users)
+  roles: Roles[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

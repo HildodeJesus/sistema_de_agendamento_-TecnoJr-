@@ -5,22 +5,23 @@ import {
   UnauthorizedException,
   mixin,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 
-export const RoleGuard = (role: string[]): Type<CanActivate> => {
+export const RoleGuard = (roles: string[]): Type<CanActivate> => {
   class RoleGuardMixin implements CanActivate {
     matchRoles(roles: string[], userRole: string) {
       return roles.some((role) => role === userRole);
     }
 
     canActivate(context: ExecutionContext) {
-      if (!role) {
+      if (roles.length == 0) {
         return true;
       }
 
       const request = context.switchToHttp().getRequest();
       const user = request.user;
-      const hasRole = this.matchRoles(role, user.role);
+
+      const hasRole = this.matchRoles(roles, user.role);
+      console.log(roles);
 
       if (!hasRole) throw new UnauthorizedException();
 

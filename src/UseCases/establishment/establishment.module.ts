@@ -9,6 +9,8 @@ import { Schedules } from 'src/entities/schedules.entity';
 import { CategoryService } from '../category/category.service';
 import { UserService } from 'src/UseCases/users/user.service';
 import { Users } from 'src/entities/users.entity';
+import { AuthModule } from '../auth/auth.module';
+import { Roles } from 'src/entities/roles.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -17,7 +19,9 @@ import { Users } from 'src/entities/users.entity';
       Establishments,
       Schedules,
       Users,
+      Roles,
     ]),
+    AuthModule,
   ],
   controllers: [EstablishmentController],
   providers: [EstablishmentService, CategoryService, UserService],

@@ -19,8 +19,8 @@ import { EstablishmentService } from './establishment.service';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto.dto';
 import { ApiPaginedResponse } from 'src/decorators/apiPaginatedResponse';
 import { EstablishmentsDto } from './dto/establishment.dto';
-import { AuthGuard } from 'src/authorization/auth.guard';
-import { RoleGuard } from 'src/authorization/role.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { RoleGuard } from 'src/guards/role.guard';
 
 @Controller('establishments')
 @ApiTags('Establishments')
